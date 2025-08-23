@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WPM Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .stats { font-size: 24px; margin: 20px 0; }
+        .test-area { font-size: 18px; margin: 20px 0; }
+        .typed { background: green; color: white; }
+        .incorrect { background: red; color: white; }
+    </style>
+</head>
+<body>
+    <h1>WPM Calculation Debug</h1>
+    <div class="stats">
+        <div>WPM: <span id="wpm">0</span></div>
+        <div>Accuracy: <span id="accuracy">100</span>%</div>
+        <div>Time: <span id="time">0</span>s</div>
+        <div>Characters: <span id="chars">0</span></div>
+    </div>
+    
+    <div class="test-area">
+        <div>Text to type: <strong>the quick brown fox jumps over the lazy dog</strong></div>
+        <div>Your typing: <span id="typed-text"></span><span id="cursor">|</span></div>
+    </div>
+    
+    <input type="text" id="input" placeholder="Start typing here..." style="width: 100%; padding: 10px; font-size: 16px;">
+    
+    <script>
+        const targetText = "the quick brown fox jumps over the lazy dog";
+        let startTime = null;
+        let currentIndex = 0;
+        
+        const wpmEl = document.getElementById('wpm');
+        const accuracyEl = document.getElementById('accuracy');
+        const timeEl = document.getElementById('time');
+        const charsEl = document.getElementById('chars');
+        const typedTextEl = document.getElementById('typed-text');
+        const inputEl = document.getElementById('input');
+        
+        function calculateWPM() {
+            if (!startTime) return;
+            
+            const now = Date.now();
+            const timeInMinutes = (now - startTime) / 60000;
+            
+            if (timeInMinutes < 0.01) return;
+            
+            const typedText = inputEl.value;
+            let correctChars = 0;
+            let totalChars = typedText.length;
+            
+            // Count correct characters
+            for (let i = 0; i < typedText.length && i < targetText.length; i++) {
+                if (typedText[i] === targetText[i]) {
+                    correctChars++;
+                }
+            }
+            
+            // Calculate WPM (5 characters = 1 word)
+            const wordsTyped = correctChars / 5;
+            const wpm = Math.round(wordsTyped / timeInMinutes);
+            const accuracy = totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 100;
+            
+            // Update display
+            wpmEl.textContent = wpm;
+            accuracyEl.textContent = accuracy;
+            timeEl.textContent = Math.round((now - startTime) / 1000);
+            charsEl.textContent = `${correctChars}/${totalChars}`;
+            
+            // Update typed text display
+            let displayText = '';
+            for (let i = 0; i < typedText.length; i++) {
+                const char = typedText[i];
+                if (i < targetText.length && char === targetText[i]) {
+                    displayText += `<span class="typed">${char}</span>`;
+                } else {
+                    displayText += `<span class="incorrect">${char}</span>`;
+                }
+            }
+            typedTextEl.innerHTML = displayText;
+        }
+        
+        inputEl.addEventListener('input', function() {
+            if (!startTime) {
+                startTime = Date.now();
+            }
+            calculateWPM();
+        });
+        
+        // Update every 100ms
+        setInterval(calculateWPM, 100);
+    </script>
+</body>
+</html>
+
+
