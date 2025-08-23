@@ -48,8 +48,8 @@ A complete clone of the popular [Monkeytype](https://monkeytype.com/) typing tes
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd kiladi
+git clone https://github.com/ragibmondal/kiladi-typing-test.git
+cd kiladi-typing-test
 ```
 
 2. Install dependencies:
@@ -167,7 +167,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Demo
 
-Visit the live demo at [your-deployment-url] to try out all the features!
+Visit the live demo at [https://kiladi-typing-test.vercel.app/](https://kiladi-typing-test.vercel.app/) to try out all the features!
 
 ---
 
